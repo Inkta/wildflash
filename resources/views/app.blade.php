@@ -4,13 +4,14 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Laravel</title>
+        <title>Wildflash</title>
 
         <link href="/css/app.css" rel="stylesheet">
         <link href="{{url('/css/bootstrap.min.css')}}" rel="stylesheet">
 
         <!-- Fonts -->
         <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
+        <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,7 +20,7 @@
                 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
     </head>
-    <body>
+    <body onload="initialize()">
         <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -59,5 +60,24 @@
         <!-- Scripts -->
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+        <script>
+            var map;
+            var geocoder;
+            var punto;
+            geocoder = new google.maps.Geocoder();
+            function initialize() {
+                geocoder = new google.maps.Geocoder();
+                punto = new google.maps.LatLng(42.2649229, 2.9502337); //ubicación del Plaza Central de Tikal, Guatemala
+                var myOptions = {
+                    zoom: 2, //nivel de zoom para poder ver de cerca.
+                    center: punto,
+                    mapTypeId: google.maps.MapTypeId.HYBRID  //Tipo de mapa inicial, satélite para ver las pirámides
+                }
+                var map_canvas = document.getElementById("map_canvas");
+                if (map_canvas != null)
+                    map = new google.maps.Map(map_canvas, myOptions);
+            }
+
+        </script>
     </body>
 </html>
