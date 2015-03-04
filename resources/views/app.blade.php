@@ -38,6 +38,12 @@
                         <li><a href="/">Home</a></li>
                     </ul>
 
+                    <form class="navbar-form navbar-left" method="post" action="{{url('usuari')}}">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                        <input class="form-control" type="text" name="profile" placeholder="Search..."></input>
+                    </form>
+
                     <ul class="nav navbar-nav navbar-right">
                         @if (Auth::guest())
                         <li><a href="{{url('/auth/login')}}">Login</a></li>
@@ -60,24 +66,7 @@
         <!-- Scripts -->
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
-        <script>
-            var map;
-            var geocoder;
-            var punto;
-            geocoder = new google.maps.Geocoder();
-            function initialize() {
-                geocoder = new google.maps.Geocoder();
-                punto = new google.maps.LatLng(42.2649229, 2.9502337); //ubicación del Plaza Central de Tikal, Guatemala
-                var myOptions = {
-                    zoom: 2, //nivel de zoom para poder ver de cerca.
-                    center: punto,
-                    mapTypeId: google.maps.MapTypeId.HYBRID  //Tipo de mapa inicial, satélite para ver las pirámides
-                }
-                var map_canvas = document.getElementById("map_canvas");
-                if (map_canvas != null)
-                    map = new google.maps.Map(map_canvas, myOptions);
-            }
+        <script src="/wildflash/public/js/App.js"></script>
 
-        </script>
     </body>
 </html>

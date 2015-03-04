@@ -13,42 +13,45 @@
 
 Route::get('/', 'WelcomeController@index');
 
+
 Route::get('home', 'HomeController@index');
 
-Route::get('usuari/{nom}',function($nom) {
-    var_dump($nom);
-    die();
-    return $nom;
+Route::group(['before' => 'auth'], function() {
+
+    Route::get('usuari/{nom}', 'HomeController@profile');
+
+    Route::post('upload', 'HomeController@upload');
+
+    Route::post('usuari', function() {
+
+        $result = \DB::table('users')
+                        ->where('name', Request::only('profile'))->first();
+        return redirect('usuari/profile/' . $result->name);
+    });
+
+    Route::get('usuari/profile/{nom}', function($nom) {
+        if (Agent::isMobile()) {
+            $validar = true;
+        } else {
+            $validar = false;
+        }
+
+        $result = \DB::table('users')
+                        ->where('name', $nom)->first();
+        $user = Auth::user();
+        $fotografies = DB::table('fotografies')->where('user_id',Auth::user()->id)->get();
+        return view('home')->with('perfil', $result)->with('usuariProfile', $user)->with('mobil', $validar)
+                ->with('fotografies',$fotografies);
+    });
+
+    Route::controller('dashboard', 'DashboardController');
 });
 
+
 Route::controllers([
+
     'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',
 ]);
 
-Route::post('hola', function() {
-    $data = Request::all();
-    var_dump($data);
-});
-
-Route::post('upload', 'HomeController@upload');
-
-
-Route::get('general', function() {
-    $fotografies = DB::table('fotografies')->orderBy('created_at', 'desc')->get();
-    return view('general')->with('fotografies',$fotografies);
-});
-
-
-Route::get('general/{id}',function($id) {
-    $fotografia = DB::table('fotografies')->where('id',$id)->first();
-    $autor = DB::table('users')->where('id',$fotografia->user_id)->first();
-    $comentaris = DB::table('comentaris')->orderBy('created_at', 'desc')->where('fotografia_id',$id)->get();
-    $comentaristes = array();
-    for ($i =0; $i < count($comentaris); $i++) {
-        $comentarista = DB::table('users')->where('id',$comentaris[$i]->user_id)->first();
-        array_push($comentaristes,$comentarista);
-    }
-    
-    return view('Imatge')->with(array('fotografia'=>$fotografia,'Autor'=>$autor->name,'comentaris'=>$comentaris,'comentaristes'=>$comentaristes));
-});
+Route::post('imatge', 'ImatgeController@getAddPhoto');

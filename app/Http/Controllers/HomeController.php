@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Auth;
 use Validator;
 use App\User;
+use Session;
 
 class HomeController extends Controller {
     /*
@@ -38,30 +39,37 @@ class HomeController extends Controller {
      * @return Response
      */
     public function index() {
+        if (Auth::check()) {
+            return redirect('usuari/'.Auth::user()->name);
+        }
+            
         return view('home');
+    }
+    
+    public function profile() {
+        Session::put('usuari',Auth::user());
+        return redirect('usuari/profile/'.Auth::user()->name);
     }
 
     public function upload(Request $request) {
-        
-        var_dump($request->file('imatge')->getMimeType());
-        die();
-        $rules = array('image' => 'required');
+       
+        $rules = array('image' => 'required|mimes:jpeg,jpg,png,jpg');
         $file = array('image' => $request->file('imatge'));
-        
+
         $validator = Validator::make($file, $rules);
 
-        if ($validator->fails()) {
+        if ($validator->fails()) { 
             return redirect('home')->withInput()->withErrors($validator);
         } else {
             if ($request->file('imatge')->isValid()) {
                 $destinationPath = 'img/' . Auth::user()->name . '/imgProfile';
                 $extension = $request->file('imatge')->getClientOriginalExtension();
-                $fileName = rand(11111, 99999) . '.' . $extension;  
-                $user = User::where('id',Auth::user()->id)->first();
-                $user->fotografiaPerfil = $destinationPath."/".$fileName;            
+                $fileName = rand(11111, 99999) . '.' . $extension;
+                $user = User::where('id', Auth::user()->id)->first();
+                $user->fotografiaPerfil = $destinationPath . "/" . $fileName;
                 $user->save();
                 $request->file('imatge')->move($destinationPath, $fileName);
-                
+                return redirect('usuari/'.Auth::user()->name);
             }
         }
     }
