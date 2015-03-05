@@ -49,9 +49,11 @@
     </div>
     <div class="row">
         <div class="fotos col-xs-12">
-            @foreach($fotografies as $foto)
-            <p> {{$foto->latitud}}</p>
+            @if(isset($perfil)&&($usuariProfile))
+            @foreach($usuariProfile->fotografies as $fotografies)
+            <img src="{{url($fotografies->path)}}" width="500" height="350"/>
             @endforeach
+            @endif
         </div>
     </div>
 
@@ -60,46 +62,25 @@
     <div class='row' id="menu_footer">
         @if (isset($mobil) && $mobil == true)
         <div class="row">
-            <div class="col-xs-12">
-                <form action="{{url('imatge')}}" method="POST" enctype="multipart/form-data" id="formulariImatge">
+            <div class="col-xs-12" >
+                <form action="{{url('imatge')}}" id="formulariImatge" method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                    <input id="enviar" type="hidden" value="upload">
                     <input type="file" onclick="clickSubmit()" name="image" capture="camera" accept="image/*"/>
-                    <input type="submit" value="Upload"/>
                 </form> 
             </div>
         </div>
         @endif
+
     </div>
     @show
-    <script>
 
-        function clickSubmit() {
-            //controlar el submit de les imatges, afegir els 2 camps latitud i longitud quan es fa una foto
-            var lat;
-            var long;
-            if (!!navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function (position) {
-                    lat = position.coords.latitude;
-                    long = position.coords.longitude;
-
-
-                    $('<input />').attr('type', 'hidden')
-                            .attr('name', "latitud")
-                            .val(lat)
-                            .appendTo('#formulariImatge');
-
-                    $('<input />').attr('type', 'hidden')
-                            .attr('name', "longitud")
-                            .val(long)
-                            .appendTo('#formulariImatge');
-                });
-            } else {
-                alert("No geo");
-            }
-        }
-
-    </script>
 
 
 </div>
+@section('scripts')
+<script src="/wildflash/public/js/Submit.js"></script>
+<script src="/wildflash/public/js/Marker.js"></script>
+
+@stop
 @endsection

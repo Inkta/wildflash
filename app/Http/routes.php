@@ -1,5 +1,6 @@
 <?php
 
+use App\User;
 /*
   |--------------------------------------------------------------------------
   | Application Routes
@@ -12,7 +13,6 @@
  */
 
 Route::get('/', 'WelcomeController@index');
-
 
 Route::get('home', 'HomeController@index');
 
@@ -30,21 +30,27 @@ Route::group(['before' => 'auth'], function() {
     });
 
     Route::get('usuari/profile/{nom}', function($nom) {
-        if (Agent::isMobile()) {
+        if (!Agent::isMobile()) {
             $validar = true;
         } else {
             $validar = false;
         }
-
-        $result = \DB::table('users')
-                        ->where('name', $nom)->first();
+        
+        $result = User::where('name',$nom)->first();
+        
         $user = Auth::user();
-        $fotografies = DB::table('fotografies')->where('user_id',Auth::user()->id)->get();
-        return view('home')->with('perfil', $result)->with('usuariProfile', $user)->with('mobil', $validar)
-                ->with('fotografies',$fotografies);
+
+
+        return view('home')->with('perfil', $result)->with('usuariProfile', $user)->with('mobil', $validar);
     });
 
     Route::controller('dashboard', 'DashboardController');
+
+    Route::get('usuari/json/{nom}', function($nom) {
+        $user = User::where('name',$nom)->first();
+        $json = $user->createJson($user);
+        return response($json)->header('Content-Type', 'application/json');
+    });
 });
 
 
@@ -55,3 +61,4 @@ Route::controllers([
 ]);
 
 Route::post('imatge', 'ImatgeController@getAddPhoto');
+

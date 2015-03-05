@@ -50,5 +50,16 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function removeFriend(User $user) {
         $this->friends()->detach($user->id);
     }
+    
+    public function createJson(User $user) {
+        $fotos = $user->fotografies;
+        
+        $json_fotos = json_encode($fotos);
+        
+        
+        
+        return $json_fotos;
+        
+    }
 
 }

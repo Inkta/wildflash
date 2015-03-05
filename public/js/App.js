@@ -25,17 +25,16 @@ var styledMapOptions = {
 
 
 geocoder = new google.maps.Geocoder();
-function initialize(imatges) {
-    console.log(imatges);
+function initialize() {
     geocoder = new google.maps.Geocoder();
     punto = new google.maps.LatLng(42.2649229, 2.9502337); //ubicación del Plaza Central de Tikal, Guatemala
     isTouchDevice();
 }
 
 function isTouchDevice() {
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 
-
+  
 
     } else {
 
@@ -213,11 +212,8 @@ function isTouchDevice() {
         var styledMapOptions = {
             name: 'Custom Style'
         };
-
+        
         var customMapType = new google.maps.StyledMapType(featureOpts, styledMapOptions);
-
-
-
         geocoder = new google.maps.Geocoder();
         punto = new google.maps.LatLng(42.2649229, 2.9502337); //ubicación del Plaza Central de Tikal, Guatemala
         var myOptions = {
@@ -229,6 +225,7 @@ function isTouchDevice() {
             mapTypeId: MY_MAPTYPE_ID
         }
         map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        console.log(map);
         map.mapTypes.set(MY_MAPTYPE_ID, customMapType);
 
 
@@ -282,9 +279,6 @@ function pedirPosicion(pos) {
         }
 
     });
-
-
-
 }
 
 

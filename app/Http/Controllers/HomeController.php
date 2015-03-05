@@ -47,8 +47,10 @@ class HomeController extends Controller {
     }
     
     public function profile() {
+        
+    
         Session::put('usuari',Auth::user());
-        return redirect('usuari/profile/'.Auth::user()->name);
+        return view('home');
     }
 
     public function upload(Request $request) {
