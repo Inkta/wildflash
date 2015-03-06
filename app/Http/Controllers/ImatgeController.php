@@ -22,20 +22,17 @@ class ImatgeController extends Controller {
             $fotografia->path = $destinationPath . '/' . $fileName;
             $fotografia->nom = "TITOL";
             $fotografia->user_id = Auth::user()->id;
-            
-            
             $fotografia->latitud = $request->input('latitud');
             $fotografia->longitud = $request->input('longitud');
             $fotografia->save();
             return redirect()->back();
         }
     }
-    
+
     public function personalizar() {
         $fotos = array();
         $directory = "imgMaps";
         $dirint = dir($directory);
-        
         while (($archivo = $dirint->read()) !== false) {
             $fotos[$archivo] = $directory . "/" . $archivo;
         }
@@ -45,6 +42,5 @@ class ImatgeController extends Controller {
         array_splice($fotos, count($fotos) - 1, 1);
         return view('maps')->with('mapas',$fotos);
     }
-
 
 }

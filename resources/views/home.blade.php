@@ -14,15 +14,17 @@
                 </div>
             </div>
             <div class="row">
-                @if(isset($perfil) && $perfil->id != $usuariProfile->id)
-                <div class="col-xs-12"><h2 class="text-center">{{ $perfil->name }}</h2></div>
+                <div class="col-xs-12"><h2 class="text-center">{{ $perfil->name }}</h2></div>       
                 <div class="col-xs-12"><h3 class="text-center">{{$perfil->rang}}</h3></div>
+                @if(isset($perfil) && $perfil->id != $usuariProfile->id) 
+                
+                @if(isset($bool) && !$bool)
                 <a href="{{url('dashboard/add-friend/'. $perfil->id)}}">Follow</a>
+                @endif
+                @if(isset($bool) && $bool)
                 <a href="{{url('dashboard/remove-friend/'. $perfil->id)}}">Dejar de seguir</a>
-
-                @else   
-                <div class="col-xs-12"><h2 class="text-center">{{ Session::get('usuari')->name }}</h2></div>
-                <div class="col-xs-12"><h3 class="text-center">{{Session::get('usuari')->rang}}</h3></div> 
+                @endif
+                
 
                 @endif
                 <div class="col-xs-12">
@@ -44,8 +46,9 @@
             </div>
         </div>
         <div class="col-xs-12 col-md-9">
-            
-            <div id="map_canvas" type_map="{{$perfil->mapa}}" class="col-xs-12" style="height:400px;"></div>
+            @if(isset($perfil))
+            <div id="map_canvas" type_map="{{$perfil->mapa}}" class="col-xs-12" style="height:400px;"></div>            
+            @endif
             @if(isset($perfil) && $perfil->id == $usuariProfile->id)  
             <a href="{{url('usuari/profile/'.$usuariProfile->name.'/maps')}}">Personalitzar mapa</a>
             @endif
@@ -54,8 +57,8 @@
     <div class="row">
         <div class="fotos col-xs-12">
             @if(isset($perfil)&&($usuariProfile))
-            @foreach($usuariProfile->fotografies as $fotografies)
-            <img src="{{url($fotografies->path)}}" width="200" height="200" class="img-circle"/>
+            @foreach($perfil->fotografies as $fotografies)
+            <img src="{{url($fotografies->path)}}" width="100px" height="100px"/>
             @endforeach
             @endif
         </div>
@@ -63,7 +66,7 @@
 
 
     @section('menu')
-   <div class='row' id="menu_footer">
+    <div class='row' id="menu_footer">
         @if (isset($mobil) && $mobil == true)
         <div class="row">
             <div class="col-xs-12" >
@@ -75,14 +78,14 @@
             </div>
         </div>
         @endif
-   </div>
+    </div>
     @show
 
 
 
 </div>
 @section('scripts')
-  
+
 <script src="/wildflash/public/js/Submit.js"></script>
 <script src="/wildflash/public/js/Marker.js"></script>
 

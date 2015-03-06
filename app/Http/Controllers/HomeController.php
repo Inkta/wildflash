@@ -9,6 +9,7 @@ use Auth;
 use Validator;
 use App\User;
 use Session;
+use Agent;
 
 class HomeController extends Controller {
     /*
@@ -40,31 +41,33 @@ class HomeController extends Controller {
      */
     public function index() {
         if (Auth::check()) {
-            return redirect('usuari/'.Auth::user()->name);
+            if (Agent::isMobile()) 
+                return redirect('news');
+                       
+            return redirect('usuari/profile/'.Auth::user()->name);
         }
+        
+
             
         return view('home');
     }
     
     public function profile() {
         
-    
-        Session::put('usuari',Auth::user());
+       
         return view('home');
     }
 
     public function upload(Request $request) {
        
         $rules = array('image' => 'required|mimes:jpeg,jpg,png,jpg');
-        
         $file = array('image' => $request->file('imatge'));
 
         $validator = Validator::make($file, $rules);
-        
+
         if ($validator->fails()) { 
             return redirect('home')->withInput()->withErrors($validator);
         } else {
-            
             if ($request->file('imatge')->isValid()) {
                 $destinationPath = 'img/' . Auth::user()->name . '/imgProfile';
                 $extension = $request->file('imatge')->getClientOriginalExtension();

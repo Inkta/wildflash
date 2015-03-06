@@ -1,5 +1,4 @@
 @extends('app')
-
 @section('content')
 <?php $i = 0; ?>
 <div class="container">
@@ -14,19 +13,14 @@
         <img class='img-circle' width="80px;" height="80px;" src="{{url($mapa)}}"/>
         <a href="{{url("guardarmapa/".$nom)}}">Select Map</a>
     </div>
-
     <?php
     if ($i == 0 || is_int($i / 3))
         echo '</div>';
     ?>
-
-<?php $i++; ?>
-
-
+    <?php $i++; ?>
     @endforeach
     @endif
 </div>
 @section('scripts')
-
 @stop
 @endsection

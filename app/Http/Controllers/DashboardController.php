@@ -30,8 +30,6 @@ class DashboardController extends Controller {
 
     public function getIndex() {
         $not_friends = User::where('id', '!=', Auth::user()->id);
-        var_dump($not_friends);
-        die();
         if (Auth::user()->friends->count()) {
             $not_friends->whereNotIn('id', Auth::user()->friends->modelKeys());
         }

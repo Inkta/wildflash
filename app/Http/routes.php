@@ -1,17 +1,8 @@
 <?php
 
 use App\User;
-
-/*
-  |--------------------------------------------------------------------------
-  | Application Routes
-  |--------------------------------------------------------------------------
-  |
-  | Here is where you can register all of the routes for an application.
-  | It's a breeze. Simply tell Laravel the URIs it should respond to
-  | and give it the controller to call when that URI is requested.
-  |
- */
+use App\Fotografia;
+use App\Comentari;
 
 Route::get('/', 'WelcomeController@index');
 
@@ -19,7 +10,7 @@ Route::get('home', 'HomeController@index');
 
 Route::group(['before' => 'auth'], function() {
 
-    Route::get('usuari/{nom}', 'HomeController@profile');
+    //Route::get('usuari/{nom}', 'HomeController@profile');
 
     Route::post('upload', 'HomeController@upload');
 
@@ -27,36 +18,38 @@ Route::group(['before' => 'auth'], function() {
 
         $result = \DB::table('users')
                         ->where('name', Request::only('profile'))->first();
+        if ($result == null)
+            return redirect()->back();
+
         return redirect('usuari/profile/' . $result->name);
     });
 
     Route::get('usuari/profile/{nom}', function($nom) {
-        if (!Agent::isMobile()) {
+        if (!Session::has('usuari'))
+            Session::put('usuari', Auth::user());
+
+        if (Agent::isMobile()) {
             $validar = true;
         } else {
             $validar = false;
         }
-
-
-
-
         $result = User::where('name', $nom)->first();
 
         $user = Auth::user();
+        $friend = DB::table('friends_users')->where('user_id', $user->id)->where('friend_id', $result->id)->first();
 
+        $bool = ($friend != null) ? true : false;
 
-        return view('home')->with('perfil', $result)->with('usuariProfile', $user)->with('mobil', $validar);
+        
+        return view('home')->with('perfil', $result)->with('usuariProfile', $user)->with('mobil', $validar)->with('bool', $bool);
     });
 
     Route::controller('dashboard', 'DashboardController');
 
-    Route::get('usuari/json/{nom}', function($nom) {
+    Route::get('usuari/profile/json/{nom}', function($nom) {
         $user = User::where('name', $nom)->first();
         $json = $user->createJson($user);
-        return response($json)->header('Content-Type', 'application/json')
-                        ->header('Access-Control-Allow-Origin', '*')
-                        ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
-                        ->header('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin');
+        return response($json)->header('Content-Type', 'application/json');
     });
 
     Route::get('usuari/profile/{nom}/maps', 'ImatgeController@personalizar');
@@ -69,16 +62,40 @@ Route::group(['before' => 'auth'], function() {
         $user->save();
         return redirect('usuari/profile/' . $user->name);
     });
+
+    Route::get('usuari/profile/imatge/{id}', function($id) {
+        $foto = Fotografia::find($id);
+
+        return view('showImage')->with('foto', $foto);
+    });
+
+    Route::post('comments/{id}', function($id) {
+        $comentari = new Comentari();
+        $comentari->comentari = Request::input('comentari');
+        $comentari->user_id = Auth::user()->id;
+        $comentari->fotografia_id = $id;
+        $comentari->save();
+        return redirect()->back();
+    
+    });
+
+    Route::get('news/', function() {
+        $photos_friends = array();
+        $friends = Auth::user()->friends;
+        foreach ($friends as $friend) {
+            array_push($photos_friends, $friend->id);
+        }
+        $photos = Fotografia::whereIn('user_id', $photos_friends)->orderBy('created_at', 'DESC')->paginate(10);
+        $photos->setPath('news');
+        return view('news')->with('fotos', $photos);
+    });
 });
 
 
-
-
-
 Route::controllers([
-
     'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',
 ]);
 
 Route::post('imatge', 'ImatgeController@getAddPhoto');
+
