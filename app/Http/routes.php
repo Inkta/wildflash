@@ -37,14 +37,14 @@ Route::group(['before' => 'auth'], function() {
             $validar = false;
         }
 
-        
 
-        
+
+
         $result = User::where('name', $nom)->first();
 
         $user = Auth::user();
 
-       
+
         return view('home')->with('perfil', $result)->with('usuariProfile', $user)->with('mobil', $validar);
     });
 
@@ -53,20 +53,22 @@ Route::group(['before' => 'auth'], function() {
     Route::get('usuari/json/{nom}', function($nom) {
         $user = User::where('name', $nom)->first();
         $json = $user->createJson($user);
-        return response($json)->header('Content-Type', 'application/json');
+        return response($json)->header('Content-Type', 'application/json')
+                        ->header('Access-Control-Allow-Origin', '*')
+                        ->header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE')
+                        ->header('Access-Control-Allow-Headers', 'Content-Type, X-Auth-Token, Origin');
     });
-    
-    Route::get('usuari/profile/{nom}/maps','ImatgeController@personalizar');
-    
-    Route::get('guardarmapa/{nom}',function($nom) {
-        $pos = strrpos($nom,".");
-        $nom = substr($nom,0,$pos);
+
+    Route::get('usuari/profile/{nom}/maps', 'ImatgeController@personalizar');
+
+    Route::get('guardarmapa/{nom}', function($nom) {
+        $pos = strrpos($nom, ".");
+        $nom = substr($nom, 0, $pos);
         $user = Auth::user();
         $user->mapa = $nom;
         $user->save();
         return redirect('usuari/profile/' . $user->name);
     });
-    
 });
 
 

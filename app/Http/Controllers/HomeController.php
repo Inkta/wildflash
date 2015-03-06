@@ -56,13 +56,15 @@ class HomeController extends Controller {
     public function upload(Request $request) {
        
         $rules = array('image' => 'required|mimes:jpeg,jpg,png,jpg');
+        
         $file = array('image' => $request->file('imatge'));
 
         $validator = Validator::make($file, $rules);
-
+        
         if ($validator->fails()) { 
             return redirect('home')->withInput()->withErrors($validator);
         } else {
+            
             if ($request->file('imatge')->isValid()) {
                 $destinationPath = 'img/' . Auth::user()->name . '/imgProfile';
                 $extension = $request->file('imatge')->getClientOriginalExtension();
@@ -71,7 +73,7 @@ class HomeController extends Controller {
                 $user->fotografiaPerfil = $destinationPath . "/" . $fileName;
                 $user->save();
                 $request->file('imatge')->move($destinationPath, $fileName);
-                return redirect('usuari/'.Auth::user()->name);
+                return redirect('usuari/profile/'.Auth::user()->name);
             }
         }
     }
