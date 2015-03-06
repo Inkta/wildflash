@@ -11,11 +11,12 @@ var URL;
 var imgURL;
 var titolImatge;
 var MY_MAPTYPE_ID = 'custom_style';
-var featureOpts;
+
 
 function localitza(e, i) {
     localitzador = e;
     urlimatge = i;
+
 }
 
 
@@ -32,192 +33,38 @@ function initialize() {
 }
 
 function isTouchDevice() {
-    if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 
-  
+
 
     } else {
+        
+        console.log($("#map_canvas").attr("type_map"));
 
-
-        featureOpts =
-                [
-                    {
-                        "featureType": "all",
-                        "elementType": "labels.text.fill",
-                        "stylers": [
-                            {
-                                "saturation": 36
-                            },
-                            {
-                                "color": "#c8102e"
-                            },
-                            {
-                                "lightness": "13"
-                            }
-                        ]
-                    },
-                    {
-                        "featureType": "all",
-                        "elementType": "labels.text.stroke",
-                        "stylers": [
-                            {
-                                "visibility": "on"
-                            },
-                            {
-                                "color": "#c8102e"
-                            },
-                            {
-                                "lightness": "-44"
-                            }
-                        ]
-                    },
-                    {
-                        "featureType": "all",
-                        "elementType": "labels.icon",
-                        "stylers": [
-                            {
-                                "visibility": "off"
-                            }
-                        ]
-                    },
-                    {
-                        "featureType": "administrative",
-                        "elementType": "geometry.fill",
-                        "stylers": [
-                            {
-                                "color": "#c8102e"
-                            },
-                            {
-                                "lightness": "-33"
-                            }
-                        ]
-                    },
-                    {
-                        "featureType": "administrative",
-                        "elementType": "geometry.stroke",
-                        "stylers": [
-                            {
-                                "color": "#c8102e"
-                            },
-                            {
-                                "lightness": "-41"
-                            },
-                            {
-                                "weight": 1.2
-                            }
-                        ]
-                    },
-                    {
-                        "featureType": "landscape",
-                        "elementType": "geometry",
-                        "stylers": [
-                            {
-                                "color": "#c8102e"
-                            },
-                            {
-                                "lightness": "-26"
-                            }
-                        ]
-                    },
-                    {
-                        "featureType": "poi",
-                        "elementType": "geometry",
-                        "stylers": [
-                            {
-                                "color": "#c8102e"
-                            },
-                            {
-                                "lightness": "-23"
-                            }
-                        ]
-                    },
-                    {
-                        "featureType": "road.highway",
-                        "elementType": "geometry.fill",
-                        "stylers": [
-                            {
-                                "color": "#c8102e"
-                            },
-                            {
-                                "lightness": "-34"
-                            }
-                        ]
-                    },
-                    {
-                        "featureType": "road.highway",
-                        "elementType": "geometry.stroke",
-                        "stylers": [
-                            {
-                                "color": "#c8102e"
-                            },
-                            {
-                                "lightness": "-27"
-                            },
-                            {
-                                "weight": 0.2
-                            }
-                        ]
-                    },
-                    {
-                        "featureType": "road.arterial",
-                        "elementType": "geometry",
-                        "stylers": [
-                            {
-                                "color": "#c8102e"
-                            },
-                            {
-                                "lightness": "-41"
-                            }
-                        ]
-                    },
-                    {
-                        "featureType": "road.local",
-                        "elementType": "geometry",
-                        "stylers": [
-                            {
-                                "color": "#c8102e"
-                            },
-                            {
-                                "lightness": "-22"
-                            }
-                        ]
-                    },
-                    {
-                        "featureType": "transit",
-                        "elementType": "geometry",
-                        "stylers": [
-                            {
-                                "color": "#c8102e"
-                            },
-                            {
-                                "lightness": "-29"
-                            }
-                        ]
-                    },
-                    {
-                        "featureType": "water",
-                        "elementType": "geometry",
-                        "stylers": [
-                            {
-                                "color": "#b40e29"
-                            },
-                            {
-                                "lightness": "0"
-                            }
-                        ]
-                    }
-                ]
-
-
+        $.getJSON('/wildflash/public/stylesMap/maps.json', function (data) {
+            var featureOpts;
+             $.each(data.mapes, function(posicio,style){
+                 if(style.nom == "default") featureOpts = style.featureOpt;     
+             })
+             getJson(featureOpts);
+    
+        });
+        var style = function getJson(data){
+          return data;   
+        }
+        
+        console.log(style);
+         
+        
         var styledMapOptions = {
             name: 'Custom Style'
         };
-        
+
         var customMapType = new google.maps.StyledMapType(featureOpts, styledMapOptions);
         geocoder = new google.maps.Geocoder();
         punto = new google.maps.LatLng(42.2649229, 2.9502337); //ubicación del Plaza Central de Tikal, Guatemala
         var myOptions = {
-            zoom: 12, //nivel de zoom para poder ver de cerca.
+            zoom: 7, //nivel de zoom para poder ver de cerca.
             center: punto,
             mapTypeControlOptions: {
                 mapTypeId: [google.maps.MapTypeId.ROADMAP, MY_MAPTYPE_ID]//Tipo de mapa inicial, satélite para ver las pirámides
@@ -225,7 +72,6 @@ function isTouchDevice() {
             mapTypeId: MY_MAPTYPE_ID
         }
         map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
-        console.log(map);
         map.mapTypes.set(MY_MAPTYPE_ID, customMapType);
 
 
@@ -271,14 +117,14 @@ function pedirPosicion(pos) {
                 infowindow.open(map, marker);
             });
 
-
-            // guardarImatge();
-
         } else {
             alert("Geocoder failed due to: " + status);
         }
 
     });
+
+
+
 }
 
 

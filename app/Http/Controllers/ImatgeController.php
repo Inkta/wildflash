@@ -30,5 +30,21 @@ class ImatgeController extends Controller {
             return redirect()->back();
         }
     }
+    
+    public function personalizar() {
+        $fotos = array();
+        $directory = "imgMaps";
+        $dirint = dir($directory);
+        
+        while (($archivo = $dirint->read()) !== false) {
+            $fotos[$archivo] = $directory . "/" . $archivo;
+        }
+        
+        $dirint->close();
+        array_splice($fotos, 0, 1);
+        array_splice($fotos, count($fotos) - 1, 1);
+        return view('maps')->with('mapas',$fotos);
+    }
+
 
 }

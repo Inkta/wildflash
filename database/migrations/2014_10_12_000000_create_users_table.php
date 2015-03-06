@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration {
 			$table->string('email')->unique();
 			$table->string('password', 60);
                         $table->string('rang')->default("Beginner");
+                        $table->string('mapa')->default("default");
                         $table->string('fotografiaPerfil')->default("imgApp/usuari.jpg");
                         $table->string('descripcio')->default("");
 			$table->rememberToken();

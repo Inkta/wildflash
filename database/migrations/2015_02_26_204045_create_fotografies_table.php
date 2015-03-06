@@ -16,8 +16,8 @@ class CreateFotografiesTable extends Migration {
             $table->string('path');
             $table->string('nom');
             $table->integer('user_id')->unsigned();
-            $table->string('latitud');
-            $table->string('longitud');
+            $table->double('latitud');
+            $table->double('longitud');
             $table->integer('puntuacio')->default(0);
             $table->integer('faltes')->default(0);
             $table->timestamps();

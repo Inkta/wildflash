@@ -1,9 +1,10 @@
 $(document).ready(function () {
     function CargarInformacio() {
         $.getJSON('/wildflash/public/stylesMap/maps.json', function (data) {
+            var userStyle = $('#map_canvas').attr('type_map');
             var featureOpts;
             $.each(data.mapes, function (posicio, style) {
-                if (style.nom == "default")
+                if (style.nom == userStyle)
                     featureOpts = style.featureOpt;
             })
             CargarMapa(featureOpts);
@@ -53,7 +54,7 @@ $(document).ready(function () {
                             '</div>' +
                             '<div id="bodyContent">' +
                             '<h2>' + e.nom + '</h2>' +
-                            '<a href="imatge/' + e.id + '"><img src=http://localhost/wildflash/public/' + e.path + ' width="50" height="50"></img></a>' +
+                            '<a href="imatge/' + e.id + '"><img class="img-circle" src=http://localhost/wildflash/public/' + e.path + ' width="50" height="50"></img></a>' +
                             '<p> Likes: ' + e.puntuacio + '</p>' +
                             '</div>' +
                             '</div>';
@@ -80,4 +81,3 @@ $(document).ready(function () {
     }
     google.maps.event.addDomListener(window, 'load', CargarInformacio);
 });
-        
