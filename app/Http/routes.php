@@ -28,7 +28,7 @@ Route::group(['before' => 'auth'], function() {
         if (!Session::has('usuari'))
             Session::put('usuari', Auth::user());
 
-        if (Agent::isMobile()) {
+        if (!Agent::isMobile()) {
             $validar = true;
         } else {
             $validar = false;
@@ -40,7 +40,6 @@ Route::group(['before' => 'auth'], function() {
 
         $bool = ($friend != null) ? true : false;
 
-        
         return view('home')->with('perfil', $result)->with('usuariProfile', $user)->with('mobil', $validar)->with('bool', $bool);
     });
 
@@ -49,6 +48,12 @@ Route::group(['before' => 'auth'], function() {
     Route::get('usuari/profile/json/{nom}', function($nom) {
         $user = User::where('name', $nom)->first();
         $json = $user->createJson($user);
+        return response($json)->header('Content-Type', 'application/json');
+    });
+    
+    Route::get('news/json/{id}', function($id) {
+        $fotografia = Fotografia::find($id);
+        $json = $fotografia->createJson($fotografia);
         return response($json)->header('Content-Type', 'application/json');
     });
 
@@ -65,8 +70,7 @@ Route::group(['before' => 'auth'], function() {
 
     Route::get('usuari/profile/imatge/{id}', function($id) {
         $foto = Fotografia::find($id);
-
-        return view('showImage')->with('foto', $foto);
+        return view('showImagePC')->with('foto', $foto);
     });
 
     Route::post('comments/{id}', function($id) {
@@ -76,23 +80,36 @@ Route::group(['before' => 'auth'], function() {
         $comentari->fotografia_id = $id;
         $comentari->save();
         return redirect()->back();
-    
     });
 
     Route::get('news/', function() {
+
         $photos_friends = array();
+        $id = Auth::user()->id;
         $friends = Auth::user()->friends;
+
+
         foreach ($friends as $friend) {
             array_push($photos_friends, $friend->id);
         }
+
         $photos = Fotografia::whereIn('user_id', $photos_friends)->orderBy('created_at', 'DESC')->paginate(10);
+        $likes = DB::table('likes_photos')->where('user_id',$id)->lists('fotografia_id');
         $photos->setPath('news');
-        return view('news')->with('fotos', $photos);
+
+        if (Agent::isMobile()) {
+            return view('newsMob')->with('fotos', $photos)->with('likes',$likes);
+        } else {
+            return view('newsPC')->with('fotos', $photos)->with('likes',$likes);
+        }
     });
+
+    Route::get('like/{id}', array('uses' => 'DashboardController@getAddLike'));
 });
 
 
 Route::controllers([
+
     'auth' => 'Auth\AuthController',
     'password' => 'Auth\PasswordController',
 ]);

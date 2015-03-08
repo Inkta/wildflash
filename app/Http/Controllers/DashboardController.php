@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Auth;
 use App\User;
+use App\Fotografia;
 
 class DashboardController extends Controller {
 
@@ -34,10 +35,33 @@ class DashboardController extends Controller {
             $not_friends->whereNotIn('id', Auth::user()->friends->modelKeys());
         }
         $not_friends = $not_friends->get();
-        
-  
+
+
 
         return view('dashboard.index')->with('not_friends', $not_friends);
+    }
+
+    public function getAddLike($id_photo) {
+
+        $user = Auth::user();
+        $fotografia = Fotografia::find($id_photo);
+
+        if ($fotografia->user_id != $user->id) {
+            $consulta = \DB::table('likes_photos')->where('user_id', $user->id)->where('fotografia_id', $fotografia->id)->get();
+
+            if ($consulta == null) {
+                \DB::table('likes_photos')->insert(['user_id' => $user->id, 'fotografia_id' => $fotografia->id]);
+                $fotografia->puntuacio = $fotografia->puntuacio + 1;
+                $fotografia->save();
+                
+            } else {
+                \DB::table('likes_photos')->where('user_id', $user->id)->where('fotografia_id', $fotografia->id)->delete();
+                $fotografia->puntuacio = $fotografia->puntuacio - 1;
+                $fotografia->save();
+            }
+        }
+        
+        return redirect()->back();
     }
 
 }

@@ -7,6 +7,7 @@ namespace App;
  * and open the template in the editor.
  */
 use Illuminate\Database\Eloquent\Model;
+use App\Fotografia;
 /**
  * Description of Fotografia
  *
@@ -22,6 +23,20 @@ class Fotografia extends Model {
 
     public function comentaris() {
         return $this->hasMany('App\Comentari');
+    }
+    
+    public function likes() {
+        return $this->hasMany('App\User','likes_photos','user_id','fotografia_id');
+    }
+    
+    public function createJson(Fotografia $fotografia) {
+        $comments = $fotografia->comentaris;
+        foreach($comments as $comment) {
+            $comment->user_id = $comment->user;
+        }
+        $json = json_encode($comments);
+        return $json;
+        
     }
 
 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use App\Fotografia;
 
 class User extends Model implements AuthenticatableContract, CanResetPasswordContract {
 
@@ -41,10 +42,18 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function friends() {
         return $this->belongsToMany('App\User', 'friends_users', 'user_id', 'friend_id');
     }
+    
+    public function likes() {
+        return $this->belongsToMany('App\Fotografia','likes_photos','user_id','fotografia_id');
+    }
 
     public function addFriend(User $user) {
         
         $this->friends()->attach($user->id);
+    }
+    
+    public function addLike(Fotografia $fotografia) {
+        $this->fotografies()->attach($fotografia->id);
     }
 
     public function removeFriend(User $user) {

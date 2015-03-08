@@ -14,17 +14,18 @@
                 </div>
             </div>
             <div class="row">
+                @if(isset($perfil) && $perfil->id != $usuariProfile->id) 
                 <div class="col-xs-12"><h2 class="text-center">{{ $perfil->name }}</h2></div>       
                 <div class="col-xs-12"><h3 class="text-center">{{$perfil->rang}}</h3></div>
-                @if(isset($perfil) && $perfil->id != $usuariProfile->id) 
-                
                 @if(isset($bool) && !$bool)
                 <a href="{{url('dashboard/add-friend/'. $perfil->id)}}">Follow</a>
                 @endif
                 @if(isset($bool) && $bool)
                 <a href="{{url('dashboard/remove-friend/'. $perfil->id)}}">Dejar de seguir</a>
                 @endif
-                
+                @else   
+                <div class="col-xs-12"><h2 class="text-center">{{ Session::get('usuari')->name }}</h2></div>
+                <div class="col-xs-12"><h3 class="text-center">{{Session::get('usuari')->rang}}</h3></div> 
 
                 @endif
                 <div class="col-xs-12">
@@ -67,6 +68,7 @@
 
     @section('menu')
     <div class='row' id="menu_footer">
+        @if(isset($perfil) && $perfil->id == $usuariProfile->id)  
         @if (isset($mobil) && $mobil == true)
         <div class="row">
             <div class="col-xs-12" >
@@ -78,6 +80,7 @@
             </div>
         </div>
         @endif
+        @endif
     </div>
     @show
 
@@ -86,7 +89,7 @@
 </div>
 @section('scripts')
 
-<script src="/wildflash/public/js/Submit.js"></script>
+
 <script src="/wildflash/public/js/Marker.js"></script>
 
 @stop

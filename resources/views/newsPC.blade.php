@@ -20,10 +20,8 @@
                     <button id="{{$foto->id}}" onclick="mostraComentaris(this)"> Mostra Comentaris</button>
                 </div>
                 @else
-                <p>Ningu ha comentat aquesta foto, sigues el primer!</p>
+                <p>Ningú ha comentat aquesta foto, sigues el primer!</p>
                 @endif
-
-
                 <form action="{{url('comments/'.$foto->id)}}" method="POST">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <textarea name="comentari" cols="50" rows="3"></textarea>
