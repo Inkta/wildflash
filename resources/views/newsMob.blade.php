@@ -6,7 +6,7 @@
     @foreach($fotos as $foto)
     <div class="row" style='margin-bottom: 20px;'>
         <div class="row" style="margin-bottom: 10px">
-               <div class="col-xs-4">
+            <div class="col-xs-4">
                 <div class="row">
                     <div class="col-xs-3">
                         <img class="img-circle" src="{{url($foto->user->fotografiaPerfil)}}" width="25" height="25"/>
@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div> 
-     
+
         <div class="row">
             <div class="col-xs-10">
                 <img class="bigImage" src="{{url($foto->path)}}"/>
@@ -38,20 +38,20 @@
 
         </div>
         <div class="row">
-            
-                <div class="col-xs-12">
-                    @if(in_array($foto->id,$likes))
-                    <button style="width:49%;" class="btn btn-warning"><a href="{{url('like/'.$foto->id)}}"><span class='glyphicon glyphicon-thumbs-down'></span> </a></button>
-                    @else
-                    <button style="width:49%;" class="btn btn-success"><a href="{{url('like/'.$foto->id)}}"><span class='glyphicon glyphicon-thumbs-up'></span> </a></button>
-                    @endif
-                    
-                    
-                    <button style="width:49%;" id="{{$foto->id}}"class="btn btn-success" onclick="Comments(this)"><span class='glyphicon glyphicon-comment'></span></button>
-                </div>
-            
 
-            
+            <div class="col-xs-12">
+                @if(in_array($foto->id,$likes))
+                <button style="width:49%;" class="btn btn-warning"><a href="{{url('like/'.$foto->id)}}"><span class='glyphicon glyphicon-thumbs-down'></span> </a></button>
+                @else
+                <button style="width:49%;" class="btn btn-success"><a href="{{url('like/'.$foto->id)}}"><span class='glyphicon glyphicon-thumbs-up'></span> </a></button>
+                @endif
+
+
+                <button style="width:49%;" id="{{$foto->id}}"class="btn btn-success" onclick="Comments(this)"><span class='glyphicon glyphicon-comment'></span></button>
+            </div>
+
+
+
         </div>
     </div>
     <hr/>
@@ -66,28 +66,16 @@
             </form> 
         </div>
     </div>
-
-    
     @endif
-
-
-
 </div>
 
 @section('scripts')
 <script>
-$(document).ready(function() {
-    var w = $(window).width();
-     $('.bigImage').attr('width', w);
-    $('.bigImage').attr('height', w);
-});
-/*
-$(document).scroll(function() {
-  var h = $(window).scrollTop();
-  $('#footer').css('position','fixed');
-  $('#footer').css('left','0');
-  $('#footer').css('bottom',h);
-});*/
+    $(document).ready(function () {
+        var w = $(window).width();
+        $('.bigImage').attr('width', w);
+        $('.bigImage').attr('height', w);
+    });
 </script>
 <script src="js/ComentariMob.js"></script>
 @stop

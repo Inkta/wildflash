@@ -47,14 +47,11 @@ class HomeController extends Controller {
             return redirect('usuari/profile/'.Auth::user()->name);
         }
         
-
-            
-        return view('home');
+        return redirect('home');
     }
     
     public function profile() {
         
-       
         return view('home');
     }
 

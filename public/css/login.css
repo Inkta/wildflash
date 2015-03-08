@@ -1,0 +1,12 @@
+.panel{background-color:rgba(0,0,0,0.5);border:none}
+.panel-heading{display:none;}
+label{font-weight:bold;color:white;}
+
+.primera{background-image:url('../imgApp/route-66.jpg');
+         -webkit-transition: background-image 2s;}
+.segona{background-image:url('../imgApp/paris.jpg');
+        -webkit-transition: background-image 2s;}
+.tercera{background-image:url('../imgApp/tokyo.jpg');
+         -webkit-transition: background-image 2s;}
+.quarta{background-image:url('../imgApp/nycity.jpg');
+        -webkit-transition: background-image 2s;}

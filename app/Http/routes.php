@@ -4,7 +4,8 @@ use App\User;
 use App\Fotografia;
 use App\Comentari;
 
-Route::get('/', 'WelcomeController@index');
+
+Route::get('/', 'HomeController@index');
 
 Route::get('home', 'HomeController@index');
 
@@ -15,7 +16,7 @@ Route::group(['before' => 'auth'], function() {
     Route::post('upload', 'HomeController@upload');
 
     Route::post('usuari', function() {
-
+        
         $result = \DB::table('users')
                         ->where('name', Request::only('profile'))->first();
         if ($result == null)
@@ -50,7 +51,7 @@ Route::group(['before' => 'auth'], function() {
         $json = $user->createJson($user);
         return response($json)->header('Content-Type', 'application/json');
     });
-    
+
     Route::get('news/json/{id}', function($id) {
         $fotografia = Fotografia::find($id);
         $json = $fotografia->createJson($fotografia);
@@ -82,6 +83,14 @@ Route::group(['before' => 'auth'], function() {
         return redirect()->back();
     });
 
+    
+    Route::post('cancelar', function() {
+        $name = Request::input('path');
+        $tempDestinationPath = 'img/' . Auth::user()->name . '/temporals';
+        unlink($tempDestinationPath."/".$name);
+        return redirect('usuari/profile/' . Auth::user()->name);
+    });
+    
     Route::get('news/', function() {
 
         $photos_friends = array();
@@ -94,17 +103,28 @@ Route::group(['before' => 'auth'], function() {
         }
 
         $photos = Fotografia::whereIn('user_id', $photos_friends)->orderBy('created_at', 'DESC')->paginate(10);
-        $likes = DB::table('likes_photos')->where('user_id',$id)->lists('fotografia_id');
+        $likes = DB::table('likes_photos')->where('user_id', $id)->lists('fotografia_id');
         $photos->setPath('news');
 
         if (Agent::isMobile()) {
-            return view('newsMob')->with('fotos', $photos)->with('likes',$likes);
+            return view('newsMob')->with('fotos', $photos)->with('likes', $likes);
         } else {
-            return view('newsPC')->with('fotos', $photos)->with('likes',$likes);
+            return view('newsPC')->with('fotos', $photos)->with('likes', $likes);
         }
     });
 
     Route::get('like/{id}', array('uses' => 'DashboardController@getAddLike'));
+    
+    Route::post('imatge', 'ImatgeController@getAddPhoto');
+    
+    Route::post('uploadImage',function() {
+            $destinationPath = 'img/' . Auth::user()->name . '/temporals';
+            $extension = Request::file('image')->getClientOriginalExtension();
+            $fileName = rand(11111, 99999) . '.' . $extension;
+            Request::file('image')->move($destinationPath, $fileName);
+        return view('upload')->with('imatge',Request::file('image'))->with('path',$fileName);
+    });
+ 
 });
 
 
@@ -114,5 +134,4 @@ Route::controllers([
     'password' => 'Auth\PasswordController',
 ]);
 
-Route::post('imatge', 'ImatgeController@getAddPhoto');
 

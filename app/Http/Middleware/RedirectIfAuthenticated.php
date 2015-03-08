@@ -35,9 +35,6 @@ class RedirectIfAuthenticated {
     public function handle($request, Closure $next) {
 
         if ($this->auth->check()) {
-            var_dump($this->auth);
-            die();
-           
             return new RedirectResponse(url('home'));
         }
 

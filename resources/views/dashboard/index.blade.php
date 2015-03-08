@@ -15,6 +15,7 @@
             <tbody>
                 @foreach (Auth::user()->friends as $friend)
                 <tr>
+                    <td><img src="{{url($friend->fotografiaPerfil)}}" class="img-circle" width="40px" height="40px"></img></td>
                     <td>{{ $friend->name }}</td>
                     <td>{{ $friend->email }}</td>
                     <td><a href="{{url('dashboard/remove-friend/'. $friend->id)}}">Remove friend</a></td>
