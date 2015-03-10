@@ -15,25 +15,27 @@ ul#navigation li a {
     margin-left: -2px;
     width: 100px;
     height: 70px;    
-    background-color:#CFCFCF;
-    background-repeat:no-repeat;
-    background-position:center center;
-    border:1px solid #AFAFAF;
+    background-color:#0092BF;
+	background-position:center;
+	background-repeat:no-repeat;
+    border:1px solid #0092BF;
     -moz-border-radius:0px 10px 10px 0px;
     -webkit-border-bottom-right-radius: 10px;
     -webkit-border-top-right-radius: 10px;
     -khtml-border-bottom-right-radius: 10px;
     -khtml-border-top-right-radius: 10px;
-    opacity: 0.6;
+    opacity: 1;
     filter:progid:DXImageTransform.Microsoft.Alpha(opacity=60);
 }
-ul#navigation .home a{
-    background-image: url(../imgApp/home.png);
+
+ul#navigation .home a      {
+    background-image: url(../imgApp/home-1.png);
 }
+
 ul#navigation .news a      {
-    background-image: url(../imgApp/rss.png);
+    background-image: url(../imgApp/rss-1.png);
 }
 ul#navigation .followers a      {
-    background-image: url(../imgApp/friends.png);
+    background-image: url(../imgApp/friends-1.png);
 }
 

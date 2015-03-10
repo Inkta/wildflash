@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Auth;
 use App\User;
 use App\Fotografia;
+use Jenssegers\Agent\Facades\Agent;
 
 class DashboardController extends Controller {
 
@@ -30,6 +31,11 @@ class DashboardController extends Controller {
     }
 
     public function getIndex() {
+        if (!Agent::isMobile()) {
+            $validar = true;
+        } else {
+            $validar = false;
+        }
         $not_friends = User::where('id', '!=', Auth::user()->id);
         if (Auth::user()->friends->count()) {
             $not_friends->whereNotIn('id', Auth::user()->friends->modelKeys());
@@ -38,7 +44,7 @@ class DashboardController extends Controller {
 
 
 
-        return view('dashboard.index')->with('not_friends', $not_friends);
+        return view('dashboard.index')->with('not_friends', $not_friends)->with('mobil', $validar);
     }
 
     public function getAddLike($id_photo) {

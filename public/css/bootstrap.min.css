@@ -5696,6 +5696,14 @@ button.upload {
     margin-bottom:5px;
 }
 
+button.uploadMob {
+
+    height: 40px;
+    overflow: hidden;
+    cursor: pointer;
+   
+}
+
 button.upload input {
     display: block !important;
 
@@ -5707,4 +5715,29 @@ button.upload input {
 
 }
 
+button.uploadMob input {
+    display: block !important;
+
+    height: 35px !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+   
+
+}
+
+#cameraAlbum{
+    display: block !important;
+    height: 35px !important;
+    opacity: 0 !important;
+    overflow: hidden !important;
+   margin-top:-30px;
+    margin-left:-12px;
+
+}
+
+
+.comentariuserlink{
+font-weight:bold;
+
+}
 /*************************FINAL MODIFICACIONS MANUALS***************************************************/

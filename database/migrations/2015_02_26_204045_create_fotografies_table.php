@@ -14,7 +14,7 @@ class CreateFotografiesTable extends Migration {
         Schema::create('fotografies', function($table) {
             $table->increments('id');
             $table->string('path');
-            $table->string('nom');
+            $table->string('nom')->default("");
             $table->integer('user_id')->unsigned();
             $table->string('latitud');
             $table->string('longitud');

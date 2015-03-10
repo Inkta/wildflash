@@ -4,7 +4,7 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            <img src="{{url("img/".Session::get('usuari')->name."/temporals/".$path)}}" width="300" height="300"/>
+            <img src="{{url("img/".Auth::user()->name."/temporals/".$path)}}" width="300" height="300"/>
         </div>
     </div>
     <div class="row">
@@ -13,18 +13,19 @@
             <input  type="hidden" name="path" value="{{$path}}">
             <div class="row">
                 <div class="col-xs-10">
-                    <span>Titol de la Imatge: </span><textarea name="titol" cols="20" rows="1"></textarea> 
+                    <input style="margin:10px 0 10px 0;margin-left:5%;"type="text" name="fname" placeholder="Titol de la imatge">
                 </div>
             </div>
-            <input id="enviar" type="submit" value="upload">
+            <button id="envia" class="btn btn-primary col-md-8 col-xs-offset-2 col-xs-8" type="submit"><span class="glyphicon glyphicon-ok"></span></button>
             
         </form> 
         <form action="{{url('cancelar')}}" method="POST" enctype="multipart/form-data">
             <input id="token" type="hidden" name="_token" value="{{ csrf_token() }}">
             <input  type="hidden" name="path" value="{{$path}}">
-            <input id="enviar" type="submit" value="Cancelar">
+            <button id="borra" class="btn btn-danger col-md-8 col-xs-offset-2 col-xs-8" type="submit"><span class="glyphicon glyphicon-remove"></span></button>
         </form>
     </div>
+    
 
 </div>
 
@@ -33,6 +34,8 @@
     $("#formulariImatge").submit(function (e) {
         if ($('#latitud').length == 0) {
             e.preventDefault();
+            $('#borra').remove();
+            $('#envia').remove();
             $('#formulariImatge').append('<p> Calculando Posicion...</p>');
             var lat;
             var long;

@@ -8,7 +8,7 @@
         <title>Wildflash</title>
 
         <link href="{{url('/css/app.css')}} rel="stylesheet">
-        <link href="{{url('/css/bootstrap.min.css')}}" rel="stylesheet">
+              <link href="{{url('/css/bootstrap.min.css')}}" rel="stylesheet">
         @yield('css')    
         <!-- Fonts -->
         <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
@@ -32,19 +32,21 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand logo-wildflash" href="/"><img src="{{url('imgApp/logo-wildflash.png')}}"/></a>
+                    <a class="navbar-brand logo-wildflash" href="{{url()}}"><img src="{{url('imgApp/logo-wildflash.png')}}"/></a>
                 </div>
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <!-- <ul class="nav navbar-nav">
                          <li><a href="/">Home</a></li>
                      </ul>-->
-
-                    <form class="navbar-form navbar-left" method="post" action="{{url('usuari')}}">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-                        <input class="form-control" type="text" name="profile" placeholder="Search..."></input>
+                    <form class="navbar-form navbar-left" role="search" method="post" action="{{url('usuari')}}">
+                        <div class="form-group">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                            <input class="form-control" type="text" name="profile" placeholder="Busca...">
+                        </div>
                     </form>
+
+
 
                     <ul class="nav navbar-nav navbar-right menulinks">
                         @if (Auth::guest())
@@ -64,6 +66,17 @@
         </nav>
 
         @yield('content')
+        @section('menulateral')
+        @if(isset($mobil) && $mobil == true)
+        <div>
+            <ul id="navigation">
+                <li class="home"><a href="{{url('home')}}" title="Home"></a></li>
+                <li class="news"><a href="{{url('news')}}" title="News"></a></li>
+                <li class="followers"><a href="{{url('dashboard')}}" title="Followers"></a></li>
+            </ul>
+        </div>
+        @endif
+        @show
 
         <!-- Scripts -->
         <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>

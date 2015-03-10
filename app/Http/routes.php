@@ -3,7 +3,7 @@
 use App\User;
 use App\Fotografia;
 use App\Comentari;
-
+use Jenssegers\Agent\Facades\Agent;
 
 Route::get('/', 'HomeController@index');
 
@@ -15,6 +15,14 @@ Route::group(['before' => 'auth'], function() {
 
     Route::post('upload', 'HomeController@upload');
 
+    Route::get('usuari', function() {
+        if (Agent::isMobile()) {
+            return redirect('news');
+        } else {
+            return redirect('usuari/profile/' . Auth::user()->name);
+        }
+    });
+    
     Route::post('usuari', function() {
         
         $result = \DB::table('users')
@@ -35,13 +43,16 @@ Route::group(['before' => 'auth'], function() {
             $validar = false;
         }
         $result = User::where('name', $nom)->first();
-
+        if ($result != null) {
         $user = Auth::user();
         $friend = DB::table('friends_users')->where('user_id', $user->id)->where('friend_id', $result->id)->first();
 
         $bool = ($friend != null) ? true : false;
 
         return view('home')->with('perfil', $result)->with('usuariProfile', $user)->with('mobil', $validar)->with('bool', $bool);
+        } else {
+            return redirect()->back();
+        }
     });
 
     Route::controller('dashboard', 'DashboardController');

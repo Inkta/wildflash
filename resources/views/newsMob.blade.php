@@ -41,13 +41,14 @@
 
             <div class="col-xs-12">
                 @if(in_array($foto->id,$likes))
-                <button style="width:49%;" class="btn btn-warning"><a href="{{url('like/'.$foto->id)}}"><span class='glyphicon glyphicon-thumbs-down'></span> </a></button>
+                
+                <button style="width:49%;" class="btn btn-danger"><a style="color:white;" href="{{url('like/'.$foto->id)}}"><span class='glyphicon glyphicon-thumbs-down'></span> </a></button>
                 @else
-                <button style="width:49%;" class="btn btn-success"><a href="{{url('like/'.$foto->id)}}"><span class='glyphicon glyphicon-thumbs-up'></span> </a></button>
+                <button style="width:49%;" class="btn btn-primary"><a style="color:white;" href="{{url('like/'.$foto->id)}}"><span class='glyphicon glyphicon-thumbs-up'></span> </a></button>
                 @endif
 
 
-                <button style="width:49%;" id="{{$foto->id}}"class="btn btn-success" onclick="Comments(this)"><span class='glyphicon glyphicon-comment'></span></button>
+                <button style="width:49%;" id="{{$foto->id}}"class="btn btn-primary" onclick="Comments(this)"><span class='glyphicon glyphicon-comment'></span></button>
             </div>
 
 
@@ -58,12 +59,28 @@
     @endforeach
     <?php echo $fotos->render(); ?>
     <div class="row" id="footer" style="position:fixed;bottom:0px;left:0px;">
-        <div class="col-xs-12" >
-            <form action="{{url('imatge')}}" id="formulariImatge" method="POST" enctype="multipart/form-data">
-                <input id="token" type="hidden" name="_token" value="{{ csrf_token() }}">
+        <div class="col-xs-4" style="padding-right:0px; padding-left:0px;height:40px;">
+            <form action="{{url('usuari/profile/'. Auth::user()->name)}}">
+                <button style="width:100%;height:100%;background-color:#000066;border:1px solid black;" class="btn btn-primary"><img src='{{url('imgApp/user-1.png')}}' width='20' height="20"/></button>
+            </form>
+
+        </div>
+        <div class="col-xs-4" style="padding-right:0px; padding-left:0px;height:40px;">
+            <form style="height:40px;" action="{{url('uploadImage')}}" id="formulariImatge" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <input id="enviar" type="hidden" value="upload">
-                <input type="file" onclick="clickSubmit()" name="image" capture="camera" accept="image/*"/>
+
+                <button style="width:100%;height:100%;background-color:#000066;border:1px solid black;" class="btn btn-primary uploadMob">
+                    <span class="glyphicon glyphicon-camera"></span>
+                    <input id="cameraAlbum" type="file" name="image" capture="camera" accept="image/*"/>
+                </button>            
             </form> 
+        </div>
+        <div class="col-xs-4" style="padding-right:0px; padding-left:0px;height:40px;">
+            <form action="{{url('dashboard')}}">
+                <button style="width:100%;height:100%;background-color:#000066;border:1px solid black;" class="btn btn-primary"><img src='{{url('imgApp/friends-1.png')}}' width='20' height="20"/></button>
+            </form>
+
         </div>
     </div>
     @endif
@@ -75,6 +92,31 @@
         var w = $(window).width();
         $('.bigImage').attr('width', w);
         $('.bigImage').attr('height', w);
+    });
+</script>
+<script>
+    function readURL(input) {
+        var reader = new FileReader();
+        if (input.id == 'cameraPerfil') {
+            if (input.files && input.files[0]) {
+                reader.onload = function (e) {
+                    $('#fotografiaPerfil').attr('src', e.target.result);
+                    $('#butoPerfil').attr('style', 'display:none;');
+                    $('#submitPerfil').removeAttr('style');
+                }
+            }
+        } else if (input.id == 'cameraAlbum') {
+            $('#formulariImatge').submit();
+
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+
+
+
+
+    $("input[type=file]").change(function () {
+        readURL(this);
     });
 </script>
 <script src="js/ComentariMob.js"></script>
